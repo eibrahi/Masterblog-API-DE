@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -13,6 +13,24 @@ POSTS = [
 @app.route('/api/posts', methods=['GET'])
 def get_posts():
     return jsonify(POSTS)
+
+@app.route('/api/posts', methods=['POST'])
+def add_post():
+    data = request.get_json()
+
+    new_id = max([post["id"] for post in POSTS]) + 1
+
+    if data.get("title") and data.get("content"):
+        new_post = {
+            "id": new_id,
+            "title": data["title"],
+            "content": data["content"]
+        }
+        POSTS.append(new_post)
+
+        return jsonify(new_post), 201
+
+    return jsonify({"error": "Title or Content not found."}), 400
 
 
 if __name__ == '__main__':
