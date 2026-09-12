@@ -10,6 +10,7 @@ POSTS = [
     {"id": 2, "title": "Second post", "content": "This is the second post."},
 ]
 
+
 @app.route('/api/posts', methods=['POST'])
 def add_post():
     data = request.get_json()
@@ -28,6 +29,7 @@ def add_post():
 
     return jsonify({"error": "Title or Content not found."}), 400
 
+
 @app.route('/api/posts/<int:id>', methods=['DELETE'])
 def delete_post(id):
     for post in POSTS:
@@ -38,6 +40,7 @@ def delete_post(id):
             }), 200
 
     return jsonify({"error": "Post not found."}), 404
+
 
 @app.route('/api/posts/<int:id>', methods=['PUT'])
 def update_post(id):
@@ -52,6 +55,7 @@ def update_post(id):
             return jsonify(post), 200
     return jsonify({"error": "Post not found."}), 404
 
+
 @app.route('/api/posts/search', methods=['GET'])
 def search_posts():
     results = []
@@ -62,6 +66,7 @@ def search_posts():
         if (title and title in post["title"].lower()) or (content and content in post["content"].lower()):
             results.append(post)
     return jsonify(results), 200
+
 
 @app.route('/api/posts', methods=['GET'])
 def get_sorted_posts():
@@ -81,14 +86,15 @@ def get_sorted_posts():
 
     return jsonify(POSTS)
 
-SWAGGER_URL="/api/docs"  # (1) swagger endpoint e.g. HTTP://localhost:5002/api/docs
-API_URL="/static/masterblog.json" # (2) ensure you create this dir and file
+
+SWAGGER_URL = "/api/docs"  # (1) swagger endpoint e.g. HTTP://localhost:5002/api/docs
+API_URL = "/static/masterblog.json"  # (2) ensure you create this dir and file
 
 swagger_ui_blueprint = get_swaggerui_blueprint(
     SWAGGER_URL,
     API_URL,
     config={
-        'app_name': 'Masterblog-API-DE' # (3) You can change this if you like
+        'app_name': 'Masterblog-API-DE'  # (3) You can change this if you like
     }
 )
 app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
